@@ -1,22 +1,17 @@
 import { StyleSheet } from "react-native";
-
-import EditScreenInfo from "../components/EditScreenInfo";
-import { Text, View } from "../components/Themed";
+import { useState } from "react";
 import { RootTabScreenProps } from "../types";
+import { Button } from "react-native-paper";
 
 export default function TabOneScreen({
   navigation,
 }: RootTabScreenProps<"TabOne">) {
+  const [count, setCount] = useState(0);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
-    </View>
+    <Button className="mt-20 p-2" onPress={() => setCount(count + 1)}>
+      Počet kliknutí: {count}
+    </Button>
   );
 }
 
