@@ -78,5 +78,17 @@ def create_restaurant():
         return "Restaurant is already in database", 400
     return data
 
+@app.route('/create_food', methods=['POST'])
+def create_food():
+    data = request.get_json()
+    food = Food.query.filter_by(name=data.get("name")).first()
+    if not food:
+        food = Food(name=data.get("name"), restaurant_id=data.get("restaurant_id"))
+        db.session.add(food)
+        db.session.commit()
+    else:
+        return "Food is already in database", 400
+    return data
+
 if __name__ == "__main__":
     app.run(debug=True)
