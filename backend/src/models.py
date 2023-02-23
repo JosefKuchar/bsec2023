@@ -8,7 +8,7 @@ class Food(db.Model):
     name = db.Column(db.String(50),primary_key=False, nullable=False)
     sacharids = db.Column(db.Integer, primary_key=False, nullable=False)
 
-    resurant_id = db.Column(db.String, db.ForeignKey('resaurant.id'),
+    restaurant_id = db.Column(db.String, db.ForeignKey('restaurant.id'),
         nullable=False)
 
 class Restaurant(db.Model):

@@ -10,7 +10,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 # initialize the app with the extension
 db.init_app(app)
 
-from models import Restaurace
+from models import *
 
 with app.app_context():
     db.create_all()
