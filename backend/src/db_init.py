@@ -5,7 +5,7 @@ from models import RecordData, Restaurant, Food
 with app.app_context():
     db.drop_all()
     db.create_all()
-    with open("./data/data.csv") as f:
+    with open("./data/data.csv", encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             print(row)
