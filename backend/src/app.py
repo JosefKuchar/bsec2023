@@ -3,7 +3,6 @@ from models import db
 from flask_cors import CORS
 from datetime import datetime
 
-
 # create the app
 app = Flask(__name__)
 CORS(app)
@@ -20,7 +19,7 @@ def home():
         data = "hello world"
         return jsonify({'data': data})
 
-@app.route('/restaurants', methods=['GET', 'POST'])
+@app.route('/restaurants', methods=['GET'])
 def restaurants():
     restaurations = Restaurant.query.all()
     restauration_list = []
@@ -31,7 +30,7 @@ def restaurants():
         })
     return jsonify(restauration_list)
 
-@app.route('/food', methods=['GET', 'POST'])
+@app.route('/food', methods=['GET'])
 def restaurants_food():
     if request.method == 'GET':
         param = request.args.get('restaurant_id')
@@ -47,7 +46,7 @@ def restaurants_food():
 
     return jsonify(food_list)
 
-@app.route('/records', methods=['GET', 'POST'])
+@app.route('/records', methods=['GET'])
 def records():
     if request.method == 'GET':
         records = RecordData.query.all()
