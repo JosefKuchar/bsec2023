@@ -114,10 +114,28 @@ def calculate_bolus():
     data = request.get_json()
 
     # add calculation of bolus prediction
+    food_records = RecordData.query.filter_by(food_id=data.get("food_id")).all()
+    for record in food_records:
+        print(record.initial_value)
 
     data["recommended_bolus"] = 8
 
     return data
+
+@app.route('/food_records', methods=['GET'])
+def food_records():
+    param = request.args.get('food_id')
+    food_record = RecordData.query.filter_by(food_id=param).all()
+    record_list = []
+    for record in food_record:
+        record_list.append({
+            "datetime": record.datetime,
+            "initial_value": record.initial_value,
+            "value_2h": record.after_value,
+            "bolus": record.bolus
+        })
+
+    return jsonify(record_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
