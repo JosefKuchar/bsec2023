@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request
 from models import db
+from flask_cors import CORS
 
 
 
 # create the app
 app = Flask(__name__)
+CORS(app)
 # configure the SQLite database, relative to the app instance folder
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 # initialize the app with the extension
