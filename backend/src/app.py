@@ -109,5 +109,15 @@ def create_food():
         return "Food is already in database", 400
     return data
 
+@app.route('/add_last_value', methods=['POST'])
+def add_last_value():
+    data = request.get_json()
+    record = RecordData.query.filter_by(id = int(data.get("record_id"))).first()
+    record.after_value = data.get("after_value")
+    db.session.commit()
+    record = RecordData.query.filter_by(id = int(data.get("record_id"))).first()
+    reponse = {"changed_value": record.after_value}
+    return jsonify(reponse)
+
 if __name__ == "__main__":
     app.run(debug=True)
