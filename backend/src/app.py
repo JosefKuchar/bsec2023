@@ -48,5 +48,18 @@ def restaurants_food():
 
     return jsonify(list)
 
+@app.route('/create_restaurant', methods=['POST'])
+def create_restaurant():
+    data = request.get_json()
+    restaurant = Restaurant.query.filter_by(name=data.get("name")).first()
+    print(restaurant)
+    if not restaurant:
+        restaurant = Restaurant(name=data.get("name"))
+        db.session.add(restaurant)
+        db.session.commit()
+    else:
+        return "Restaurant is already in database", 400
+    return data
+
 if __name__ == "__main__":
     app.run(debug=True)

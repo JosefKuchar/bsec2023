@@ -9,18 +9,14 @@ with app.app_context():
     with open("./data/data.csv", encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            print(row)
             datetime_csv = row['\ufeffDate'] + ' ' + row['Time']
             datetime_csv = datetime.strptime(datetime_csv,"%d-%m-%y %H:%M")
-            print(datetime_csv)
             restaurant = Restaurant.query.filter_by(name=row['Restaurant']).first()
-            print(restaurant)
             if not restaurant:
                 restaurant = Restaurant(name=row["Restaurant"])
                 db.session.add(restaurant)
                 db.session.commit()
             restaurant = Restaurant.query.filter_by(name=row['Restaurant']).first()
-            print(restaurant.id)
             food = Food.query.filter_by(name=row['Food'], restaurant_id=restaurant.id).first()
             if not food:
                 food = Food(name=row["Food"])
@@ -32,3 +28,4 @@ with app.app_context():
 
             db.session.add(record)
         db.session.commit()
+        print("DATABASE INITIALIZED")
