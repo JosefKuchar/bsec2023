@@ -12,25 +12,20 @@ db.init_app(app)
 
 from models import *
 
-with app.app_context():
-    db.create_all()
-
-
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if (request.method == 'GET'):
         data = "hello world"
         return jsonify({'data': data})
 
-@app.route('/users', methods=['GET', 'POST'])
+@app.route('/restaurants', methods=['GET', 'POST'])
 def users():
-    restaurations = Restaurace.query.all()
+    restaurations = Restaurant.query.all()
     restauration_list = []
     for restauration in restaurations:
         restauration_list.append({
             'id': restauration.id,
-            'name': restauration.name,
-            'email': restauration.email
+            'name': restauration.name
         })
     return jsonify(restauration_list)
 
