@@ -16,41 +16,25 @@ import { useNavigate } from "react-router-dom";
 import Navigation from "./Navigation";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
+import { URL } from "./config";
 
 export default function Places() {
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/restaurants")
+  const [restaurants, setRestaurants] = useState<any>([]);
+
+  const getRestaurants = () => {
+    fetch(`${URL}/restaurants`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        setRestaurants(data);
       });
-  });
+  };
+
+  useEffect(getRestaurants, []);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogText, setDialogText] = useState("");
 
   const navigate = useNavigate();
-
-  const restaurants = [
-    { name: "Lorem ipsum", id: 1 },
-    { name: "Hasdf", id: 2 },
-    { name: "Hasdf", id: 2 },
-    { name: "Lorem ipsum", id: 1 },
-    { name: "Hasdf", id: 2 },
-    { name: "Hasdf", id: 2 },
-    { name: "Lorem ipsum", id: 1 },
-    { name: "Hasdf", id: 2 },
-    { name: "Hasdf", id: 2 },
-    { name: "Lorem ipsum", id: 1 },
-    { name: "Hasdf", id: 2 },
-    { name: "Hasdf", id: 2 },
-    { name: "Lorem ipsum", id: 1 },
-    { name: "Hasdf", id: 2 },
-    { name: "Hasdf", id: 2 },
-    { name: "Lorem ipsum", id: 1 },
-    { name: "Hasdf", id: 2 },
-    { name: "Hasdf", id: 2 },
-  ];
 
   const closeDialog = () => {
     setDialogOpen(false);
@@ -58,7 +42,17 @@ export default function Places() {
   };
 
   const handleAdd = () => {
-    closeDialog();
+    fetch(`${URL}/create_restaurant`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: dialogText,
+      }),
+    })
+      .then(() => closeDialog())
+      .then(() => getRestaurants());
   };
 
   const handleCancel = () => {
@@ -68,7 +62,7 @@ export default function Places() {
   return (
     <>
       <List>
-        {restaurants.map((restaurant) => (
+        {restaurants.map((restaurant: any) => (
           <>
             <ListItemButton
               onClick={() => navigate(`/places/${restaurant.id}`)}
@@ -100,6 +94,8 @@ export default function Places() {
             label="Název restaurace"
             fullWidth
             variant="standard"
+            value={dialogText}
+            onChange={(e) => setDialogText(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
