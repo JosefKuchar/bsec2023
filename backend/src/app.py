@@ -109,5 +109,15 @@ def create_food():
         return "Food is already in database", 400
     return data
 
+@app.route('/calculate_bolus', methods=['POST'])
+def calculate_bolus():
+    data = request.get_json()
+
+    # add calculation of bolus prediction
+
+    data["recommended_bolus"] = 8
+
+    return data
+
 if __name__ == "__main__":
     app.run(debug=True)
