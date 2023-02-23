@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from models import db
 from flask_cors import CORS
+from datetime import datetime
 
 # create the app
 app = Flask(__name__)
@@ -61,10 +62,27 @@ def records():
                 'food_id': record.food_id
             })
 
-    # if request.method == 'POST':
-        
+
 
     return jsonify(record_list)
+
+@app.route('/newrecord',methods=['POST'])
+def new_record():
+    if request.method == 'POST':
+        data = request.get_json()
+
+        body_datetime =  datetime.strptime(data.get("datetime"),'%Y-%m-%dT%H:%M:%S.%f')
+        print(body_datetime)
+        records = RecordData(datetime=body_datetime,
+                                initial_value=data.get("initial_value"),
+                                after_value=data.get("after_value"),
+                                bolus=data.get("bolus"),
+                                food_id=data.get("food_id")
+                                )
+        db.session.add(records)
+        db.session.commit()
+
+    return data
 
 @app.route('/create_restaurant', methods=['POST'])
 def create_restaurant():
