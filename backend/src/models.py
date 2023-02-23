@@ -16,9 +16,6 @@ class Restaurant(db.Model):
     name = db.Column(db.String(50), unique=True, nullable=False)
     food = db.relationship('food', backref='restaurant', lazy=True)
 
-    recorddata_id = db.Column(db.String, db.ForeignKey('recorddata.id'),
-        nullable=False)
-
 class RecordData(db.Model):
     id = db.Column(db.String, primary_key=True, nullable=False)
     date = db.Column(db.String(20),primary_key = False, nullable=False)
