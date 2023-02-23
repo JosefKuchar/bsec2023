@@ -67,7 +67,7 @@ def records():
 
     return jsonify(record_list)
 
-@app.route('/newrecord',methods=['GET','POST'])
+@app.route('/newrecord',methods=['POST'])
 def new_record():
     if request.method == 'POST':
         data = request.get_json()
