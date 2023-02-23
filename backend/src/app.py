@@ -37,16 +37,33 @@ def restaurants_food():
         param = request.args.get('restaurant_id')
         restaurants_food = Food.query.filter_by(restaurant_id = int(param))
         restaurant = Restaurant.query.filter_by(id=int(param)).first()
-        list = []
+        food_list = []
         for food in restaurants_food:
-            list.append({
+            food_list.append({
                 'id': food.id,
                 'name': food.name,
                 'sacharids': food.sacharids,
                 'restaurant': restaurant.name
             })
 
-    return jsonify(list)
+    return jsonify(food_list)
+
+@app.route('/records', methods=['GET', 'POST'])
+def records():
+    if request.method == 'GET':
+        records = RecordData.query.all()
+        record_list = []
+        for record in records:
+            record_list.append({
+                'datetime': record.datetime,
+                'initial_value': record.initial_value,
+                'after_value': record.after_value,
+                'bolus': record.bolus,
+                'restaurant_id': record.restaurant_id,
+                'food_id': record.food_id
+            })
+
+    return jsonify(record_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
