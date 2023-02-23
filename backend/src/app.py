@@ -71,7 +71,7 @@ def new_record():
     if request.method == 'POST':
         data = request.get_json()
 
-        body_datetime =  datetime.strptime(data.get("datetime"),'%Y-%m-%dT%H:%M:%S.%f')
+        body_datetime =  datetime.strptime(data.get("datetime"),'%Y-%m-%dT%H:%M:%S.%fZ')
         print(body_datetime)
         records = RecordData(datetime=body_datetime,
                                 initial_value=data.get("initial_value"),
