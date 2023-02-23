@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from models import db
 from flask_cors import CORS
-
+import json
 
 
 # create the app
@@ -53,13 +53,18 @@ def records():
         records = RecordData.query.all()
         record_list = []
         for record in records:
+            json_date = record.datetime.strftime('%Y-%m-%dT%H:%M:%S.%f')
+            print(json_date)
             record_list.append({
-                'datetime': record.datetime,
+                'datetime': json_date,
                 'initial_value': record.initial_value,
                 'after_value': record.after_value,
                 'bolus': record.bolus,
                 'food_id': record.food_id
             })
+
+    # if request.method == 'POST':
+        
 
     return jsonify(record_list)
 
