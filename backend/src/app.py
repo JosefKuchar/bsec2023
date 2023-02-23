@@ -119,5 +119,15 @@ def add_last_value():
     reponse = {"changed_value": record.after_value}
     return jsonify(reponse)
 
+@app.route('/calculate_bolus', methods=['POST'])
+def calculate_bolus():
+    data = request.get_json()
+
+    # add calculation of bolus prediction
+
+    data["recommended_bolus"] = 8
+
+    return data
+
 if __name__ == "__main__":
     app.run(debug=True)
