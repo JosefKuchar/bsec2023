@@ -1,6 +1,7 @@
 import csv
 from app import *
 from models import RecordData, Restaurant, Food
+from datetime import datetime
 
 with app.app_context():
     db.drop_all()
@@ -9,7 +10,9 @@ with app.app_context():
         reader = csv.DictReader(f)
         for row in reader:
             print(row)
-
+            datetime_csv = row['\ufeffDate'] + ' ' + row['Time']
+            datetime_csv = datetime.strptime(datetime_csv,"%d-%m-%y %H:%M")
+            print(datetime_csv)
             restaurant = Restaurant.query.filter_by(name=row['Restaurant']).first()
             print(restaurant)
             if not restaurant:
@@ -25,7 +28,7 @@ with app.app_context():
                 db.session.commit()
 
             food = Food.query.filter_by(name=row['Food'], restaurant_id=restaurant.id).first()
-            record = RecordData(date=row["\ufeffDate"], time=row["Time"], initial_value=row["Initial"], bolus=row["Bolus"], after_value=row["Result"], restaurant_id=restaurant.id, food_id=food.id)
+            record = RecordData(datetime=datetime_csv, initial_value=row["Initial"], bolus=row["Bolus"], after_value=row["Result"], restaurant_id=restaurant.id, food_id=food.id)
 
             db.session.add(record)
         db.session.commit()

@@ -16,8 +16,7 @@ class Restaurant(db.Model):
 
 class RecordData(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    date = db.Column(db.String(20),primary_key = False, nullable=False)
-    time = db.Column(db.String(20),primary_key = False, nullable=False)
+    datetime = db.Column(db.DateTime,primary_key = False, nullable=False)
     initial_value = db.Column(db.Float,primary_key = False, nullable=False)
     after_value = db.Column(db.Float,primary_key = False, nullable=True)
     bolus = db.Column(db.String(20),primary_key = False, nullable=False)
