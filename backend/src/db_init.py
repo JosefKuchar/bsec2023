@@ -24,7 +24,7 @@ with app.app_context():
                 db.session.commit()
 
             food = Food.query.filter_by(name=row['Food'], restaurant_id=restaurant.id).first()
-            record = RecordData(datetime=datetime_csv, initial_value=row["Initial"], bolus=row["Bolus"], after_value=row["Result"], restaurant_id=restaurant.id, food_id=food.id)
+            record = RecordData(datetime=datetime_csv, initial_value=row["Initial"], bolus=row["Bolus"], after_value=row["Result"], food_id=food.id)
 
             db.session.add(record)
         db.session.commit()

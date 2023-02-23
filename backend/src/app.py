@@ -42,7 +42,6 @@ def restaurants_food():
             food_list.append({
                 'id': food.id,
                 'name': food.name,
-                'sacharids': food.sacharids,
                 'restaurant': restaurant.name
             })
 
@@ -59,7 +58,6 @@ def records():
                 'initial_value': record.initial_value,
                 'after_value': record.after_value,
                 'bolus': record.bolus,
-                'restaurant_id': record.restaurant_id,
                 'food_id': record.food_id
             })
 
@@ -77,6 +75,8 @@ def create_restaurant():
     else:
         return "Restaurant is already in database", 400
     return data
+
+# @app.route('')
 
 if __name__ == "__main__":
     app.run(debug=True)
