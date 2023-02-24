@@ -136,13 +136,25 @@ def calculate_bolus():
     # add calculation of bolus prediction
     food_records = RecordData.query.filter_by(food_id=data.get("food_id")).all()
     df = pd.DataFrame()
-    for record in food_records:
-        row = {
-            "initial_val": record.initial_value,
-            "result": record.after_value,
-            "bolus": int(record.bolus)
-        }
-        df = df.append(row, ignore_index=True)
+    if len(food_records) < 3:
+        records_all = RecordData.query.all()
+        for record in records_all:
+            row = {
+                "initial_val": record.initial_value,
+                "result": record.after_value,
+                "bolus": int(record.bolus)
+            }
+            df = df.append(row, ignore_index=True)
+        predicted = "all"
+    else:
+        for record in food_records:
+            row = {
+                "initial_val": record.initial_value,
+                "result": record.after_value,
+                "bolus": int(record.bolus)
+            }
+            df = df.append(row, ignore_index=True)
+        predicted = "specific"
 
     X = df[['initial_val', 'result']]
     y = df['bolus']
@@ -153,6 +165,7 @@ def calculate_bolus():
     predicted_bolus = regr.predict([[data.get("initial_value"), 8]])
 
     data["recommended_bolus"] = round(predicted_bolus[0])
+    data["predicted_by"] = predicted
 
     return data
 
