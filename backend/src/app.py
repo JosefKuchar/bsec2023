@@ -164,7 +164,10 @@ def calculate_bolus():
 
     predicted_bolus = regr.predict([[data.get("initial_value"), 8]])
 
-    data["recommended_bolus"] = round(predicted_bolus[0])
+    if round(predicted_bolus[0]) < 0:
+        data["recommended_bolus"] = 0
+    else:
+        data["recommended_bolus"] = round(predicted_bolus[0])
     data["predicted_by"] = predicted
 
     return data
@@ -184,7 +187,7 @@ def food_records():
 
     return jsonify(record_list)
 
-@app.route('/bolus_list', methods=['GET'])
+@app.route('/bolus_list', methods=['POST'])
 def bolus_list():
     data = request.get_json()
 
@@ -223,10 +226,14 @@ def bolus_list():
 
         predicted_bolus = regr.predict([[data.get("initial_value"), 8]])
 
+        if round(predicted_bolus[0]) < 0:
+            predicted_bolus = 0
+        else:
+            predicted_bolus = round(predicted_bolus[0])
         food_list.append({
             'id': food.id,
             'name': food.name,
-            'recommended_bolus': round(predicted_bolus[0]),
+            'recommended_bolus': predicted_bolus,
             'predicted_with': predicted
         })
     food_list = sorted(food_list, key=lambda k: k['recommended_bolus'])
