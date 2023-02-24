@@ -42,6 +42,7 @@ export default function NewEntry() {
   const navigate = useNavigate();
   const [key, setKey] = useState<any>(null);
   const [bolusInfoOpen, setBolusInfoOpen] = useState(false);
+  const [edited, setEdited] = useState(false);
 
   useEffect(() => {
     fetch(`${URL}/restaurants`)
@@ -67,6 +68,7 @@ export default function NewEntry() {
         .then((data) => {
           console.log(data);
           setBolus(data.recommended_bolus);
+          setEdited(false);
           setOk(data.predicted_by !== "all");
         });
     } else {
@@ -178,7 +180,10 @@ export default function NewEntry() {
               }}
               fullWidth
               value={bolus ?? ""}
-              onChange={(e) => setBolus(e.target.value)}
+              onChange={(e) => {
+                setBolus(e.target.value);
+                setEdited(true);
+              }}
             />
           </Grid>
           <Grid item xs={2}>
@@ -186,9 +191,9 @@ export default function NewEntry() {
               color="primary"
               size="large"
               onClick={() => setBolusInfoOpen(true)}
-              disabled={ok === null}
+              disabled={ok === null || edited}
             >
-              {ok === true || ok === null ? (
+              {ok === true || ok === null || edited ? (
                 <InfoIcon />
               ) : (
                 <WarningIcon style={{ color: "#e8bf09" }} />
