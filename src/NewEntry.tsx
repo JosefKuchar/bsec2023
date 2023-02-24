@@ -8,12 +8,16 @@ import {
   Typography,
   AppBar,
   Toolbar,
+  IconButton,
 } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useState, useEffect } from "react";
 import { URL } from "./config";
 import Navigation from "./Navigation";
+import InfoIcon from "@mui/icons-material/Info";
+import { useNavigate } from "react-router-dom";
+import WarningIcon from "@mui/icons-material/Warning";
 
 const filter = createFilterOptions<any>();
 
@@ -32,6 +36,8 @@ export default function NewEntry() {
   const [bolus, setBolus] = useState<string | null>(null);
   const [restaurants, setRestaurants] = useState<any>([]);
   const [foods, setFoods] = useState<any>([]);
+  const [ok, setOk] = useState<boolean | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${URL}/restaurants`)
@@ -55,10 +61,15 @@ export default function NewEntry() {
       })
         .then((res) => res.json())
         .then((data) => {
+          console.log(data);
           setBolus(data.recommended_bolus);
+          setOk(data.predicted_by !== "all");
         });
+    } else {
+      setOk(null);
+      setBolus(null);
     }
-  }, [food?.id, sugar]);
+  }, [food?.id, sugar, bolus]);
 
   useEffect(() => {
     if (!restaurant?.id) return;
@@ -91,7 +102,7 @@ export default function NewEntry() {
     <>
       <div className="font-heading font-medium text-3xl p-4">Nový záznam</div>
       <Container className="p-2">
-        <Grid container spacing={2}>
+        <Grid container spacing={2} alignItems="center">
           <Grid item xs={12}>
             <TextField
               label="Současná hladina cukru v krvi"
@@ -147,7 +158,7 @@ export default function NewEntry() {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={10}>
             <TextField
               label="Bolus"
               InputProps={{
@@ -159,6 +170,20 @@ export default function NewEntry() {
               value={bolus ?? ""}
               onChange={(e) => setBolus(e.target.value)}
             />
+          </Grid>
+          <Grid item xs={2}>
+            <IconButton
+              color="primary"
+              size="large"
+              onClick={() => navigate(`/bolus_info/${sugar}/${food?.id}`)}
+              disabled={ok === null}
+            >
+              {ok === true || ok === null ? (
+                <InfoIcon />
+              ) : (
+                <WarningIcon style={{ color: "#e8bf09" }} />
+              )}
+            </IconButton>
           </Grid>
           <Grid item xs={12}>
             <Button

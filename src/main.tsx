@@ -8,6 +8,7 @@ import NewEntry from "./NewEntry";
 import Overview from "./Overview";
 import Places from "./Places";
 import Item from "./Item";
+import BolusInfo from "./BolusInfo";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: "/places/:id/:itemId",
     element: <Item />,
+  },
+  {
+    path: "/bolus_info/:sugar/:foodId",
+    element: <BolusInfo />,
   },
 ]);
 

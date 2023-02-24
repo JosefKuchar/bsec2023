@@ -15,7 +15,8 @@ export default function Navigation() {
 
     if (location.pathname === "/") setValue(0);
     else if (location.pathname === "/overview") setValue(1);
-    else setValue(2);
+    else if (location.pathname === "/places") setValue(2);
+    else setValue(null);
   }, [location]);
 
   return (
