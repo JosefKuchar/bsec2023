@@ -1,7 +1,7 @@
 import csv
 from app import *
 from models import RecordData, Restaurant, Food
-from datetime import datetime
+from datetime import datetime, timedelta
 
 with app.app_context():
     db.drop_all()
@@ -11,6 +11,7 @@ with app.app_context():
         for row in reader:
             datetime_csv = row['\ufeffDate'] + ' ' + row['Time']
             datetime_csv = datetime.strptime(datetime_csv,"%d-%m-%y %H:%M")
+            datetime_csv = datetime_csv - timedelta(hours=1)
             restaurant = Restaurant.query.filter_by(name=row['Restaurant']).first()
             if not restaurant:
                 restaurant = Restaurant(name=row["Restaurant"])
