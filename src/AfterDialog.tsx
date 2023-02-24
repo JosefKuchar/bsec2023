@@ -6,7 +6,6 @@ import {
   DialogActions,
   Button,
   TextField,
-  InputAdornment,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { URL, WAIT_TIME } from "./config";
@@ -21,7 +20,7 @@ export default function AfterDialog() {
       .then((res) => res.json())
       .then((data) => {
         if (data.after_value === null) {
-          setId(data.id);
+          setId(data.record_id);
           const now = new Date();
           const then = new Date(data.datetime + "Z");
           const diff = now.getTime() - then.getTime();
