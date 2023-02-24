@@ -125,28 +125,36 @@ def add_last_value():
 def calculate_bolus():
     data = request.get_json()
 
-    # add calculation of bolus prediction
-    food_records = RecordData.query.filter_by(food_id=data.get("food_id")).all()
-    df = pd.DataFrame()
-    for record in food_records:
-        row = {
-            "initial_val": record.initial_value,
-            "result": record.after_value,
-            "bolus": int(record.bolus)
-        }
-        df = df.append(row, ignore_index=True)
+    restaurants_food = Food.query.filter_by(restaurant_id=data.get("restaurant_id"))
+    food_list = []
+    for food in restaurants_food:
+        # add calculation of bolus prediction
+        food_records = RecordData.query.filter_by(food_id=food.id).all()
+        df = pd.DataFrame()
+        for record in food_records:
+            row = {
+                "initial_val": record.initial_value,
+                "result": record.after_value,
+                "bolus": int(record.bolus)
+            }
+            df = df.append(row, ignore_index=True)
 
-    X = df[['initial_val', 'result']]
-    y = df['bolus']
+        X = df[['initial_val', 'result']].values
+        y = df['bolus'].values
 
-    regr = linear_model.LinearRegression()
-    regr.fit(X, y)
+        regr = linear_model.LinearRegression()
+        regr.fit(X, y)
 
-    predicted_bolus = regr.predict([[data.get("initial_value"), 8]])
+        predicted_bolus = regr.predict([[data.get("initial_value"), 8]])
 
-    data["recommended_bolus"] = round(predicted_bolus[0])
+        food_list.append({
+            'id': food.id,
+            'name': food.name,
+            'recommended_bolus': round(predicted_bolus[0])
+        })
+    food_list = sorted(food_list, key=lambda k: k['recommended_bolus'])
 
-    return data
+    return jsonify(food_list)
 
 @app.route('/food_records', methods=['GET'])
 def food_records():
