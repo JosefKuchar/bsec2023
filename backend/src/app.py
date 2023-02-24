@@ -111,6 +111,14 @@ def create_food():
         return "Food is already in database", 400
     return data
 
+@app.route('/food_name', methods=['GET'])
+def get_food_name():
+    param = request.args.get('food_id')
+    food = Food.query.filter_by(id = int(param)).first()
+    name = food.name
+
+    return jsonify(name)
+
 @app.route('/add_last_value', methods=['POST'])
 def add_last_value():
     data = request.get_json()
