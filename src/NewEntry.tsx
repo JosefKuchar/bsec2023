@@ -19,6 +19,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import { useNavigate } from "react-router-dom";
 import WarningIcon from "@mui/icons-material/Warning";
 import AfterDialog from "./AfterDialog";
+import BolusInfo from "./BolusInfo";
 
 const filter = createFilterOptions<any>();
 
@@ -40,6 +41,7 @@ export default function NewEntry() {
   const [ok, setOk] = useState<boolean | null>(null);
   const navigate = useNavigate();
   const [key, setKey] = useState<any>(null);
+  const [bolusInfoOpen, setBolusInfoOpen] = useState(false);
 
   useEffect(() => {
     fetch(`${URL}/restaurants`)
@@ -178,7 +180,7 @@ export default function NewEntry() {
             <IconButton
               color="primary"
               size="large"
-              onClick={() => navigate(`/bolus_info/${sugar}/${food?.id}`)}
+              onClick={() => setBolusInfoOpen(true)}
               disabled={ok === null}
             >
               {ok === true || ok === null ? (
@@ -214,6 +216,11 @@ export default function NewEntry() {
         </Snackbar>
       </Container>
       <AfterDialog key={key} />
+      <BolusInfo
+        open={bolusInfoOpen}
+        onClose={() => setBolusInfoOpen(false)}
+        foodId={food?.id}
+      />
       <Navigation />
     </>
   );
