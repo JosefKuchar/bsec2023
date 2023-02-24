@@ -191,6 +191,7 @@ def bolus_list():
                     "bolus": int(record.bolus)
                 }
                 df = df.append(row, ignore_index=True)
+            predicted = "all"
         else :
             for record in food_records:
                 row = {
@@ -199,6 +200,7 @@ def bolus_list():
                     "bolus": int(record.bolus)
                 }
                 df = df.append(row, ignore_index=True)
+            predicted = "specific"
 
         X = df[['initial_val', 'result']].values
         y = df['bolus'].values
@@ -211,7 +213,8 @@ def bolus_list():
         food_list.append({
             'id': food.id,
             'name': food.name,
-            'recommended_bolus': round(predicted_bolus[0])
+            'recommended_bolus': round(predicted_bolus[0]),
+            'predicted_with': predicted
         })
     food_list = sorted(food_list, key=lambda k: k['recommended_bolus'])
 
