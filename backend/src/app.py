@@ -125,6 +125,48 @@ def add_last_value():
 def calculate_bolus():
     data = request.get_json()
 
+    # add calculation of bolus prediction
+    food_records = RecordData.query.filter_by(food_id=data.get("food_id")).all()
+    df = pd.DataFrame()
+    for record in food_records:
+        row = {
+            "initial_val": record.initial_value,
+            "result": record.after_value,
+            "bolus": int(record.bolus)
+        }
+        df = df.append(row, ignore_index=True)
+
+    X = df[['initial_val', 'result']]
+    y = df['bolus']
+
+    regr = linear_model.LinearRegression()
+    regr.fit(X, y)
+
+    predicted_bolus = regr.predict([[data.get("initial_value"), 8]])
+
+    data["recommended_bolus"] = round(predicted_bolus[0])
+
+    return data
+
+@app.route('/food_records', methods=['GET'])
+def food_records():
+    param = request.args.get('food_id')
+    food_record = RecordData.query.filter_by(food_id=param).all()
+    record_list = []
+    for record in food_record:
+        record_list.append({
+            "datetime": record.datetime,
+            "initial_value": record.initial_value,
+            "value_2h": record.after_value,
+            "bolus": record.bolus
+        })
+
+    return jsonify(record_list)
+
+@app.route('/bolus_list', methods=['GET'])
+def bolus_list():
+    data = request.get_json()
+
     restaurants_food = Food.query.filter_by(restaurant_id=data.get("restaurant_id"))
     food_list = []
     for food in restaurants_food:
@@ -155,21 +197,6 @@ def calculate_bolus():
     food_list = sorted(food_list, key=lambda k: k['recommended_bolus'])
 
     return jsonify(food_list)
-
-@app.route('/food_records', methods=['GET'])
-def food_records():
-    param = request.args.get('food_id')
-    food_record = RecordData.query.filter_by(food_id=param).all()
-    record_list = []
-    for record in food_record:
-        record_list.append({
-            "datetime": record.datetime,
-            "initial_value": record.initial_value,
-            "value_2h": record.after_value,
-            "bolus": record.bolus
-        })
-
-    return jsonify(record_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
