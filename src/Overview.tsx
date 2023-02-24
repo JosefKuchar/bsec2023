@@ -141,7 +141,7 @@ export default function Overview() {
             <Line
               type="monotone"
               dataKey="value"
-              stroke="#ff7300"
+              stroke="#1976d2"
               name="Cukr (mmol/L)"
               // colorRendering={}
             />

@@ -85,7 +85,7 @@ export default function Items() {
         ))}
       </List>
       <Fab
-        color="secondary"
+        color="primary"
         aria-label="add"
         sx={{
           position: "fixed",

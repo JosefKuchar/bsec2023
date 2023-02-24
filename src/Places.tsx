@@ -84,7 +84,7 @@ export default function Places() {
         ))}
       </List>
       <Fab
-        color="secondary"
+        color="primary"
         aria-label="add"
         sx={{
           position: "fixed",
