@@ -62,7 +62,7 @@ export default function Overview() {
     return date > now && date < endDate.toDate();
   });
 
-  const data = filtered.flatMap((record: any) => {
+  const data_raw = filtered.flatMap((record: any) => {
     const date = new Date(record.datetime);
     return [
       {
@@ -75,6 +75,14 @@ export default function Overview() {
         time: addHours(date, 2).getTime(),
       },
     ];
+  });
+
+  const data = data_raw.map((item: any, index: number) => {
+    if (item.time > (data_raw[index + 1]?.time ?? Number.MAX_SAFE_INTEGER)) {
+      return { ...item, time: data_raw[index + 1]?.time };
+    } else {
+      return item;
+    }
   });
 
   const CustomTooltip = ({ active, payload, label }: any) => {
