@@ -16,6 +16,7 @@ import Navigation from "./Navigation";
 import { useEffect, useState } from "react";
 import { URL } from "./config";
 import AddIcon from "@mui/icons-material/Add";
+import AfterDialog from "./AfterDialog";
 
 export default function Items() {
   const { id } = useParams();
@@ -114,6 +115,7 @@ export default function Items() {
         </DialogActions>
       </Dialog>
       <Navigation />
+      <AfterDialog />
     </>
   );
 }
