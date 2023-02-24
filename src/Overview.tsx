@@ -31,6 +31,7 @@ import { useEffect, useState } from "react";
 import { URL } from "./config";
 import moment from "moment";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import AfterDialog from "./AfterDialog";
 
 function addHours(date: any, hours: number) {
   // 👇 Make copy with "Date" constructor.
@@ -76,6 +77,23 @@ export default function Overview() {
     ];
   });
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      console.log(payload[0].payload);
+      console.log(payload[1]?.payload);
+
+      return (
+        <div className="bg-white p-2 border-2 border-gray-300">
+          <p>{moment(payload[0].payload.time).format("DD. MM. HH:mm")}</p>
+          <p>Cukr: {payload[0].payload.value}</p>
+          {payload[0].payload.bolus && <p>Bolus: {payload[0].payload.bolus}</p>}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <>
       <div className="font-heading font-medium text-3xl p-4">Přehled</div>
@@ -116,14 +134,15 @@ export default function Overview() {
               tickFormatter={(unixTime) => moment(unixTime).format("DD. MM.")}
             />
             <YAxis width={20} />
-            <Tooltip />
-            {/* <Legend /> */}
+            <Tooltip content={<CustomTooltip />} />
+            <Legend />
             <CartesianGrid stroke="#f5f5f5" />
-            <Bar dataKey="bolus" barSize={5} fill="#413ea0" />
+            <Bar dataKey="bolus" barSize={5} fill="#413ea0" name="Bolus" />
             <Line
               type="monotone"
               dataKey="value"
-              stroke="#ff7300"
+              stroke="#1976d2"
+              name="Cukr (mmol/L)"
               // colorRendering={}
             />
           </ComposedChart>
@@ -132,7 +151,7 @@ export default function Overview() {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="right">Datum&nbsp;a&nbsp;čas</TableCell>
+                <TableCell align="center">Datum&nbsp;a&nbsp;čas</TableCell>
                 <TableCell align="right">Bolus</TableCell>
                 <TableCell align="right">Cukr před</TableCell>
                 <TableCell align="right">Cukr po</TableCell>
@@ -143,14 +162,17 @@ export default function Overview() {
                 .slice(0)
                 .reverse()
                 .map((row: any) => {
-                  const date = moment(row.datetime).format("DD. MM. HH:mm");
+                  const date2 = new Date(row.datetime + "Z");
+                  const date = moment(date2.toISOString()).format(
+                    "DD. MM. HH:mm"
+                  );
 
                   return (
                     <TableRow
                       key={row.name}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="right">{date}</TableCell>
+                      <TableCell align="center">{date}</TableCell>
                       <TableCell align="right">{row.bolus}</TableCell>
                       <TableCell align="right">{row.initial_value}</TableCell>
                       <TableCell align="right">{row.after_value}</TableCell>
@@ -161,6 +183,7 @@ export default function Overview() {
           </Table>
         </TableContainer>
         <Navigation />
+        <AfterDialog />
       </Container>
     </>
   );
