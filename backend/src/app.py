@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from models import db
 from flask_cors import CORS
 from datetime import datetime
+import pandas as pd
+from sklearn import linear_model
 
 # create the app
 app = Flask(__name__)
@@ -125,10 +127,24 @@ def calculate_bolus():
 
     # add calculation of bolus prediction
     food_records = RecordData.query.filter_by(food_id=data.get("food_id")).all()
+    df = pd.DataFrame()
     for record in food_records:
-        print(record.initial_value)
+        row = {
+            "initial_val": record.initial_value,
+            "result": record.after_value,
+            "bolus": int(record.bolus)
+        }
+        df = df.append(row, ignore_index=True)
 
-    data["recommended_bolus"] = 8
+    X = df[['initial_val', 'result']]
+    y = df['bolus']
+
+    regr = linear_model.LinearRegression()
+    regr.fit(X, y)
+
+    predicted_bolus = regr.predict([[data.get("initial_value"), 8]])
+
+    data["recommended_bolus"] = round(predicted_bolus[0])
 
     return data
 
