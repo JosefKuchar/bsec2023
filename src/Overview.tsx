@@ -162,7 +162,10 @@ export default function Overview() {
                 .slice(0)
                 .reverse()
                 .map((row: any) => {
-                  const date = moment(row.datetime).format("DD. MM. HH:mm");
+                  const date2 = new Date(row.datetime + "Z");
+                  const date = moment(date2.toISOString()).format(
+                    "DD. MM. HH:mm"
+                  );
 
                   return (
                     <TableRow
