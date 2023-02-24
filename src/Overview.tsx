@@ -31,6 +31,7 @@ import { useEffect, useState } from "react";
 import { URL } from "./config";
 import moment from "moment";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import AfterDialog from "./AfterDialog";
 
 function addHours(date: any, hours: number) {
   // 👇 Make copy with "Date" constructor.
@@ -76,6 +77,23 @@ export default function Overview() {
     ];
   });
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      console.log(payload[0].payload);
+      console.log(payload[1]?.payload);
+
+      return (
+        <div className="bg-white p-2 border-2 border-gray-300">
+          <p>{moment(payload[0].payload.time).format("DD. MM. HH:mm")}</p>
+          <p>Cukr: {payload[0].payload.value}</p>
+          {payload[0].payload.bolus && <p>Bolus: {payload[0].payload.bolus}</p>}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <>
       <div className="font-heading font-medium text-3xl p-4">Přehled</div>
@@ -116,14 +134,15 @@ export default function Overview() {
               tickFormatter={(unixTime) => moment(unixTime).format("DD. MM.")}
             />
             <YAxis width={20} />
-            <Tooltip />
-            {/* <Legend /> */}
+            <Tooltip content={<CustomTooltip />} />
+            <Legend />
             <CartesianGrid stroke="#f5f5f5" />
-            <Bar dataKey="bolus" barSize={5} fill="#413ea0" />
+            <Bar dataKey="bolus" barSize={5} fill="#413ea0" name="Bolus" />
             <Line
               type="monotone"
               dataKey="value"
               stroke="#ff7300"
+              name="Cukr (mmol/L)"
               // colorRendering={}
             />
           </ComposedChart>
@@ -161,6 +180,7 @@ export default function Overview() {
           </Table>
         </TableContainer>
         <Navigation />
+        <AfterDialog />
       </Container>
     </>
   );
