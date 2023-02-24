@@ -98,9 +98,14 @@ export default function NewEntry() {
         bolus: bolus,
         after_value: null,
       }),
+    }).then(() => {
+      setKey(Math.random());
+      setSuccessOpen(true);
+      setSugar(null);
+      setFood(null);
+      setRestaurant(null);
+      setBolus(null);
     });
-    setKey(Math.random());
-    setSuccessOpen(true);
   };
 
   return (
@@ -118,7 +123,7 @@ export default function NewEntry() {
               }}
               type="number"
               fullWidth
-              value={sugar}
+              value={sugar ?? ""}
               onChange={(e) => setSugar(e.target.value)}
             />
           </Grid>
@@ -205,6 +210,7 @@ export default function NewEntry() {
           open={successOpen}
           autoHideDuration={6000}
           onClose={() => setSuccessOpen(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert
             onClose={() => setSuccessOpen(false)}
