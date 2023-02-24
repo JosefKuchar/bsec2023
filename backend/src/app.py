@@ -194,6 +194,7 @@ def get_first():
 
     json_date =  record.datetime.strftime('%Y-%m-%dT%H:%M:%S.%f')
     record = {
+        'record_id': record.id,
         'datetime': json_date,
         'initial_value': record.initial_value,
         'after_value': record.after_value,
@@ -203,15 +204,42 @@ def get_first():
 
     return record
 
-@app.route('/recommendation', methods=['POST'])
+@app.route('/recommend', methods=['GET'])
 def get_recommendation():
-    data = request.get_json()
 
-    meals = RecordData.query.order_by(RecordData.id.desc()).limit(5).all()
+    meals = RecordData.query.order_by(RecordData.id.desc()).limit(6).all()
+    meal_list = []
+    for meal in meals:
+        food_name = Food.query.filter_by(id=meal.food_id)
+        meal_list.append(food_name.name)
 
-    print(meals)
+    prompt = "jsem diabetik, jidlo co jsem jedl za posledni dva dny: \
+    \"{meal1}\" \"{meal2}\" \"{meal3}\" \"{meal4}\" \"{meal5}\" \"{meal6}\"".format(
+        meal1=meal_list[0],
+        meal2=meal_list[1],
+        meal3=meal_list[2],
+        meal4=meal_list[3],
+        meal5=meal_list[4],
+        meal6=meal_list[5]
+        )
 
-    return "ok"
+    print(prompt)
+
+    #api call text-davinci-003
+
+    chat_result = "1. Zamenit knedliky za celozrnnou mouku.\
+                    2. Vybirat si produkty se snizenym obsahem soli a oleje.\
+                    3. Vyhledavat jidla s vysokymi hladinami vlaknin a nizkymi hladinami sacharidu.\
+                    4. Celkove hodnoceni podle snezeneho jidla: 6/10"
+
+    chat_result.readlines()
+
+    print(chat_result)
+
+    # chat_result
+
+
+    return jsonify(meal_list)
 
 @app.route('/bolus_list', methods=['POST'])
 def bolus_list():
