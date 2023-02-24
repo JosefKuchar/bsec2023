@@ -156,6 +156,7 @@ def calculate_bolus():
             df = df.append(row, ignore_index=True)
         predicted = "specific"
 
+    df.dropna(inplace=True)
     X = df[['initial_val', 'result']]
     y = df['bolus']
 
@@ -218,6 +219,7 @@ def bolus_list():
                 df = df.append(row, ignore_index=True)
             predicted = "specific"
 
+        df.dropna(inplace=True)
         X = df[['initial_val', 'result']].values
         y = df['bolus'].values
 
