@@ -187,6 +187,31 @@ def food_records():
 
     return jsonify(record_list)
 
+@app.route('/get_first')
+def get_first():
+    record = RecordData.query.order_by(RecordData.id.desc()).first()
+
+    json_date =  record.datetime.strftime('%Y-%m-%dT%H:%M:%S.%f')
+    record = {
+        'datetime': json_date,
+        'initial_value': record.initial_value,
+        'after_value': record.after_value,
+        'bolus': record.bolus,
+        'food_id': record.food_id
+            }
+
+    return record
+
+@app.route('/recommendation', methods=['POST'])
+def get_recommendation():
+    data = request.get_json()
+
+    meals = RecordData.query.order_by(RecordData.id.desc()).limit(5).all()
+
+    print(meals)
+
+    return "ok"
+
 @app.route('/bolus_list', methods=['POST'])
 def bolus_list():
     data = request.get_json()
