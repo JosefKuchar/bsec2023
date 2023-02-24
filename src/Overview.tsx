@@ -132,7 +132,7 @@ export default function Overview() {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="right">Datum a čas</TableCell>
+                <TableCell align="right">Datum&nbsp;a&nbsp;čas</TableCell>
                 <TableCell align="right">Bolus</TableCell>
                 <TableCell align="right">Cukr před</TableCell>
                 <TableCell align="right">Cukr po</TableCell>
@@ -143,9 +143,7 @@ export default function Overview() {
                 .slice(0)
                 .reverse()
                 .map((row: any) => {
-                  const date = moment(row.datetime).format(
-                    "DD. MM. YYYY HH:mm"
-                  );
+                  const date = moment(row.datetime).format("DD. MM. HH:mm");
 
                   return (
                     <TableRow

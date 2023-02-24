@@ -10,7 +10,7 @@ import {
 import { useState, useEffect } from "react";
 import { URL, WAIT_TIME } from "./config";
 
-export default function AfterDialog() {
+export default function AfterDialog({ key }: any) {
   const [sugar, setSugar] = useState<any>(null);
   const [open, setOpen] = useState(false);
   const [id, setId] = useState<any>(null);
@@ -24,14 +24,14 @@ export default function AfterDialog() {
           const now = new Date();
           const then = new Date(data.datetime + "Z");
           const diff = now.getTime() - then.getTime();
-          if (diff <= WAIT_TIME) {
+          if (diff >= WAIT_TIME) {
             show();
           } else {
             setTimeout(show, WAIT_TIME - diff);
           }
         }
       });
-  }, []);
+  }, [key]);
 
   const show = () => {
     setOpen(true);

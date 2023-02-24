@@ -17,6 +17,7 @@ import Navigation from "./Navigation";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
 import { URL } from "./config";
+import AfterDialog from "./AfterDialog";
 
 export default function Places() {
   const [restaurants, setRestaurants] = useState<any>([]);
@@ -113,6 +114,7 @@ export default function Places() {
         </DialogActions>
       </Dialog>
       <Navigation />
+      <AfterDialog />
     </>
   );
 }

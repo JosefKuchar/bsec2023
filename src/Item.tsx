@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { URL } from "./config";
+import AfterDialog from "./AfterDialog";
 
 export default function Item() {
   const params = useParams();
@@ -74,6 +75,7 @@ export default function Item() {
           </Table>
         </TableContainer>
         <Navigation />
+        <AfterDialog />
       </Container>
     </>
   );

@@ -39,6 +39,7 @@ export default function NewEntry() {
   const [foods, setFoods] = useState<any>([]);
   const [ok, setOk] = useState<boolean | null>(null);
   const navigate = useNavigate();
+  const [key, setKey] = useState<any>(null);
 
   useEffect(() => {
     fetch(`${URL}/restaurants`)
@@ -96,6 +97,7 @@ export default function NewEntry() {
         after_value: null,
       }),
     });
+    setKey(Math.random());
     setSuccessOpen(true);
   };
 
@@ -211,7 +213,7 @@ export default function NewEntry() {
           </Alert>
         </Snackbar>
       </Container>
-      <AfterDialog />
+      <AfterDialog key={key} />
       <Navigation />
     </>
   );

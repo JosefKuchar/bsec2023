@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { URL } from "./config";
+import AfterDialog from "./AfterDialog";
 
 export default function BulusInfo() {
   const params = useParams();
@@ -92,6 +93,7 @@ export default function BulusInfo() {
           </>
         )}
         <Navigation />
+        <AfterDialog />
       </Container>
     </>
   );
