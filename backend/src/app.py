@@ -210,11 +210,18 @@ def get_recommendation():
     meals = RecordData.query.order_by(RecordData.id.desc()).limit(6).all()
     meal_list = []
     for meal in meals:
-        food_name = Food.query.filter_by(id=meal.food_id)
-        meal_list.append(food_name.name)
+        food_name = Food.query.filter_by(id = int(meal.food_id)).first()
+        food_name = food_name.name
+        print(food_name)
+        meal_list.append(food_name)
 
-    prompt = "jsem diabetik, jidlo co jsem jedl za posledni dva dny: \
-    \"{meal1}\" \"{meal2}\" \"{meal3}\" \"{meal4}\" \"{meal5}\" \"{meal6}\"".format(
+    prompt = "jsem diabetik, jidlo co jsem jedl za posledni dva dny:\"\
+    {meal1}\" \"{meal2}\" \"{meal3}\" \"{meal4}\" \"{meal5}\" \"{meal6}\"\
+        3 tipy pro zlepseni zdravi podle snezeneho jidla: \
+        1. \
+        2.\
+        3.\
+        4. celkove hodnoceni podle snezeneho jidla: 0-10".format(
         meal1=meal_list[0],
         meal2=meal_list[1],
         meal3=meal_list[2],
@@ -225,21 +232,15 @@ def get_recommendation():
 
     print(prompt)
 
-    #api call text-davinci-003
+    #api call text-davinci-003 and parse the output
 
-    chat_result = "1. Zamenit knedliky za celozrnnou mouku.\
-                    2. Vybirat si produkty se snizenym obsahem soli a oleje.\
-                    3. Vyhledavat jidla s vysokymi hladinami vlaknin a nizkymi hladinami sacharidu.\
-                    4. Celkove hodnoceni podle snezeneho jidla: 6/10"
+    chat_result = {"1":"1. Zamenit knedliky za celozrnnou mouku.",
+                   "2":"2. Vybirat si produkty se snizenym obsahem soli a oleje",
+                   "3":"3. Vyhledavat jidla s vysokymi hladinami vlaknin a nizkymi hladinami sacharidu.",
+                   "4":"4. Celkove hodnoceni podle snezeneho jidla: 6/10",
+                   "grade":"6/10"}
 
-    chat_result.readlines()
-
-    print(chat_result)
-
-    # chat_result
-
-
-    return jsonify(meal_list)
+    return jsonify(chat_result)
 
 @app.route('/bolus_list', methods=['POST'])
 def bolus_list():
