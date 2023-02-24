@@ -61,7 +61,16 @@ export default function Places() {
 
   return (
     <>
-      <List>
+      <div className="font-heading font-medium text-3xl p-4">
+        Restaurace & místa
+      </div>
+      <List
+        style={{
+          paddingBottom: "56px",
+          paddingLeft: "16px",
+          paddingRight: "16px",
+        }}
+      >
         {restaurants.map((restaurant: any) => (
           <>
             <ListItemButton

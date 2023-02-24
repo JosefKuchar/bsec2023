@@ -7,6 +7,9 @@ import Items from "./Items";
 import NewEntry from "./NewEntry";
 import Overview from "./Overview";
 import Places from "./Places";
+import Item from "./Item";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 const router = createBrowserRouter([
   {
@@ -25,10 +28,16 @@ const router = createBrowserRouter([
     path: "/places/:id",
     element: <Items />,
   },
+  {
+    path: "/places/:id/:itemId",
+    element: <Item />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <LocalizationProvider dateAdapter={AdapterMoment}>
+      <RouterProvider router={router} />
+    </LocalizationProvider>
   </React.StrictMode>
 );
