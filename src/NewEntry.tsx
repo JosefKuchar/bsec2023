@@ -26,12 +26,10 @@ interface IState {
 
 export default function NewEntry() {
   const [successOpen, setSuccessOpen] = useState(false);
-  const [state, setState] = useState<IState>({
-    sugar: null,
-    restaurant: null,
-    food: null,
-    bolus: "",
-  });
+  const [sugar, setSugar] = useState<string | null>(null);
+  const [restaurant, setRestaurant] = useState<any | null>(null);
+  const [food, setFood] = useState<any | null>(null);
+  const [bolus, setBolus] = useState<string | null>(null);
   const [restaurants, setRestaurants] = useState<any>([]);
   const [foods, setFoods] = useState<any>([]);
 
@@ -44,30 +42,33 @@ export default function NewEntry() {
   }, []);
 
   useEffect(() => {
-    if (state?.food?.id && state?.sugar) {
+    if (food?.id && sugar) {
       fetch(`${URL}/calculate_bolus`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          initial_value: Number(sugar),
+          food_id: food.id,
+        }),
       })
         .then((res) => res.json())
         .then((data) => {
-          setState({ ...state, bolus: data.recommended_bolus });
+          setBolus(data.recommended_bolus);
         });
     }
-  }, [state?.food?.id, state?.sugar]);
+  }, [food?.id, sugar]);
 
   useEffect(() => {
-    if (!state?.restaurant?.id) return;
+    if (!restaurant?.id) return;
 
-    fetch(`${URL}/food?restaurant_id=${state.restaurant.id}`)
+    fetch(`${URL}/food?restaurant_id=${restaurant?.id}`)
       .then((res) => res.json())
       .then((data) => {
         setFoods(data);
       });
-  }, [state?.restaurant?.id]);
+  }, [restaurant?.id]);
 
   const handleNew = () => {
     fetch(`${URL}/newrecord`, {
@@ -77,9 +78,9 @@ export default function NewEntry() {
       },
       body: JSON.stringify({
         datetime: new Date().toISOString(),
-        initial_value: state.sugar,
-        food_id: state.food.id,
-        bolus: state.bolus,
+        initial_value: sugar,
+        food_id: food.id,
+        bolus: bolus,
         after_value: null,
       }),
     });
@@ -88,11 +89,7 @@ export default function NewEntry() {
 
   return (
     <>
-      <AppBar position="static" className="mb-6">
-        <Toolbar>
-          <Typography variant="h6">Nový záznam</Typography>
-        </Toolbar>
-      </AppBar>
+      <div className="font-heading font-medium text-3xl p-4">Nový záznam</div>
       <Container className="p-2">
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -105,8 +102,8 @@ export default function NewEntry() {
               }}
               type="number"
               fullWidth
-              value={state.sugar}
-              onChange={(e) => setState({ ...state, sugar: e.target.value })}
+              value={sugar}
+              onChange={(e) => setSugar(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>
@@ -121,10 +118,11 @@ export default function NewEntry() {
               clearOnBlur
               handleHomeEndKeys
               getOptionLabel={(option: any) => option.name}
-              value={state.restaurant}
-              onChange={(e, value: any) =>
-                setState({ ...state, restaurant: value, food: null })
-              }
+              value={restaurant}
+              onChange={(e, value: any) => {
+                setRestaurant(value);
+                setFood(null);
+              }}
               //   filterOptions={(options, params) => {
               //     const filtered = filter(options, params);
               //     if (params.inputValue !== "") {
@@ -144,8 +142,8 @@ export default function NewEntry() {
               options={foods}
               getOptionLabel={(option: any) => option.name}
               renderInput={(params) => <TextField {...params} label="Jídlo" />}
-              value={state.food}
-              onChange={(e, value: any) => setState({ ...state, food: value })}
+              value={food}
+              onChange={(e, value: any) => setFood(value)}
               fullWidth
             />
           </Grid>
@@ -158,8 +156,8 @@ export default function NewEntry() {
                 ),
               }}
               fullWidth
-              value={state.bolus}
-              onChange={(e) => setState({ ...state, bolus: e.target.value })}
+              value={bolus ?? ""}
+              onChange={(e) => setBolus(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>

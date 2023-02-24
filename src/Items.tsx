@@ -62,7 +62,16 @@ export default function Items() {
 
   return (
     <>
-      <List>
+      <div className="font-heading font-medium text-3xl p-4">
+        Jídla v restauraci
+      </div>
+      <List
+        style={{
+          paddingBottom: "56px",
+          paddingLeft: "16px",
+          paddingRight: "16px",
+        }}
+      >
         {items.map((item: any) => (
           <>
             <ListItemButton
