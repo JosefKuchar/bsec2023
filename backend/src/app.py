@@ -51,7 +51,7 @@ def restaurants_food():
 @app.route('/records', methods=['GET'])
 def records():
     if request.method == 'GET':
-        records = RecordData.query.all()
+        records = RecordData.query.order_by(RecordData.datetime).all()
         record_list = []
         for record in records:
             json_date = record.datetime.strftime('%Y-%m-%dT%H:%M:%S.%f')
