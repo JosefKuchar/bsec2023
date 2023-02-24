@@ -151,7 +151,7 @@ export default function Overview() {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="right">Datum&nbsp;a&nbsp;čas</TableCell>
+                <TableCell align="center">Datum&nbsp;a&nbsp;čas</TableCell>
                 <TableCell align="right">Bolus</TableCell>
                 <TableCell align="right">Cukr před</TableCell>
                 <TableCell align="right">Cukr po</TableCell>
@@ -172,7 +172,7 @@ export default function Overview() {
                       key={row.name}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="right">{date}</TableCell>
+                      <TableCell align="center">{date}</TableCell>
                       <TableCell align="right">{row.bolus}</TableCell>
                       <TableCell align="right">{row.initial_value}</TableCell>
                       <TableCell align="right">{row.after_value}</TableCell>
