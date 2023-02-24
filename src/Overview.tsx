@@ -80,7 +80,7 @@ export default function Overview() {
     <>
       <div className="font-heading font-medium text-3xl p-4">Přehled</div>
       <Container className="p-2" style={{ paddingBottom: "64px" }}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style={{ paddingBottom: 8 }}>
           <Grid item xs={6}>
             <FormControl fullWidth>
               <InputLabel id="range">Časový rozsah</InputLabel>
@@ -115,7 +115,7 @@ export default function Overview() {
               // Show day and month
               tickFormatter={(unixTime) => moment(unixTime).format("DD. MM.")}
             />
-            <YAxis />
+            <YAxis width={20} />
             <Tooltip />
             {/* <Legend /> */}
             <CartesianGrid stroke="#f5f5f5" />

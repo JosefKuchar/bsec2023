@@ -18,6 +18,7 @@ import Navigation from "./Navigation";
 import InfoIcon from "@mui/icons-material/Info";
 import { useNavigate } from "react-router-dom";
 import WarningIcon from "@mui/icons-material/Warning";
+import AfterDialog from "./AfterDialog";
 
 const filter = createFilterOptions<any>();
 
@@ -67,9 +68,9 @@ export default function NewEntry() {
         });
     } else {
       setOk(null);
-      setBolus(null);
+      // setBolus(null);
     }
-  }, [food?.id, sugar, bolus]);
+  }, [food?.id, sugar]);
 
   useEffect(() => {
     if (!restaurant?.id) return;
@@ -210,6 +211,7 @@ export default function NewEntry() {
           </Alert>
         </Snackbar>
       </Container>
+      <AfterDialog />
       <Navigation />
     </>
   );
